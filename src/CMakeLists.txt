@@ -18,6 +18,12 @@ add_executable(spacebar ${spacebar_SRCS})
 
 kconfig_add_kcfg_files(spacebar settingsmanager.kcfgc GENERATE_MOC)
 
+if(Corrosion_FOUND)
+    corrosion_import_crate(MANIFEST_PATH ${CMAKE_CURRENT_SOURCE_DIR}/rs/Cargo.toml)
+    target_include_directories(spacebar PRIVATE
+        ${CMAKE_BINARY_DIR}/cargo/build/${Rust_CARGO_TARGET}/cxxbridge/spacebar-rust/src/)
+endif()
+
 target_include_directories(spacebar PRIVATE ${CMAKE_BINARY_DIR})
 target_compile_definitions(spacebar PRIVATE -DQT_NO_CAST_FROM_ASCII)
 target_link_libraries(spacebar
@@ -41,5 +47,6 @@ target_link_libraries(spacebar
     mms
     QCoro::QCoroCore
     QCoro::QCoroDBus
+    spacebar-rust
 )
 install(TARGETS spacebar ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
