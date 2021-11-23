@@ -472,6 +472,7 @@ Kirigami.ScrollablePage {
                     property color textColor: model.sentByMe ? listView.outgoingTextColor : listView.incomingTextColor
                     property var attachments: model.attachments ? JSON.parse(model.attachments) : []
                     property bool clipped: false
+                    readonly property bool isStandalone: content.attachments.length === 1
 
                     // message contents
                     Controls.Label {
@@ -586,7 +587,7 @@ Kirigami.ScrollablePage {
                                 id: image
                                 source: isImage ? filePath : ""
                                 fillMode: Image.PreserveAspectFit
-                                sourceSize.width: Math.round(delegateParent.width * 0.7)
+                                sourceSize.width: Math.round(delegateParent.width * 0.7) + (content.isStandalone ? Kirigami.Units.largeSpacing * 3 : 0)
                                 height: Math.min(msgPage.height * 0.5, image.implicitHeight)
                                 asynchronous: false
                                 cache: false
@@ -601,7 +602,7 @@ Kirigami.ScrollablePage {
                                 }
 
                                 Component.onCompleted: {
-                                    if (content.attachments.length === 1 && isImage) {
+                                    if (content.isStandalone && isImage) {
                                         rect.color = "transparent"
                                         rect.border.color = "transparent"
                                         rect.padding = 0
